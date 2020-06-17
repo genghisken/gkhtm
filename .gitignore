@@ -41,6 +41,10 @@ HTMCircleAllIDs
 code/htm/Makefile
 intersect
 lookup
+gkhtm.py
+gkhtm_wrap.cxx
+gkhtm_wrap.cpp
+Makefile
 
 # Symlinks and directories
 data

@@ -1,0 +1,4 @@
+recursive-include gkhtm *
+global-exclude gkhtm_wrap.cpp
+global-exclude gkhtm_wrap.cxx
+global-exclude Makefile
