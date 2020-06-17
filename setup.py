@@ -25,8 +25,8 @@ if platform.system() == 'Darwin':
             os.environ['MACOSX_DEPLOYMENT_TARGET'] = '10.9'
 else:
     # Assumes Linux
-    extra_compile_args = ['-c', '-fPIC', '-g', '-Wall', '-D_BOOL_EXISTS', '-D__unix', '-UDIAGNOSE', '-Wno-deprecated', '-fpermissive', '-stdlib=libc++', '-arch', 'x86_64']
-    extra_link_args = ['-arch', 'x86_64']
+    extra_compile_args = ['-c', '-fPIC', '-g', '-Wall', '-D_BOOL_EXISTS', '-D__unix', '-UDIAGNOSE', '-Wno-deprecated', '-fpermissive']
+    extra_link_args = []
 
 static_include_dirs = ['gkhtm/htm/include']
 plib_include_dirs = static_include_dirs.copy()
