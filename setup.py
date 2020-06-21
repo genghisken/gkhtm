@@ -106,7 +106,7 @@ setup(
     cmdclass = {'buildstatic': BuildStaticLib},
     ext_modules=ext_modules,
     long_description_content_type="text/markdown",
-    version="0.0.1",
+    version="0.0.2",
     author='genghisken',
     author_email='ken.w.smith@gmail.com',
     license='MIT',
@@ -118,7 +118,7 @@ setup(
           'Programming Language :: Python :: 3.6',
           'Topic :: Utilities',
     ],
-    python_requires='>=3.7',
+    python_requires='>=3.6',
     include_package_data=True,
     zip_safe=False
 )
