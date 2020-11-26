@@ -89,7 +89,7 @@ class BuildStaticLib(Command):
 # to swig.
 # ALSO - swig version 3.0+ is required.  This does NOT work with version 2 for some reason.
 
-htm_sources += ['gkhtm/gkhtm.i', 'gkhtm/HTMCircleRegion.cpp']
+htm_sources += ['gkhtm/gkhtm.i', 'gkhtm/HTMCircleRegion.cpp', 'gkhtm/HTMCircleAllIDsCassandra.cpp']
 
 #htm_module = Extension('gkhtm._gkhtm', swig_opts=['-modern', '-c++'], extra_compile_args=extra_compile_args, extra_link_args=extra_link_args, sources=htm_sources, include_dirs=plib_include_dirs, libraries = libraries, library_dirs = library_dirs)
 htm_module = Extension('gkhtm._gkhtm', swig_opts=['-modern', '-c++'], extra_compile_args=extra_compile_args, extra_link_args=extra_link_args, sources=htm_sources, include_dirs=plib_include_dirs)
@@ -106,7 +106,7 @@ setup(
     cmdclass = {'buildstatic': BuildStaticLib},
     ext_modules=ext_modules,
     long_description_content_type="text/markdown",
-    version="0.0.2",
+    version="0.0.5",
     author='genghisken',
     author_email='ken.w.smith@gmail.com',
     license='MIT',
