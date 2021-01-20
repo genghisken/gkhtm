@@ -106,7 +106,7 @@ setup(
     cmdclass = {'buildstatic': BuildStaticLib},
     ext_modules=ext_modules,
     long_description_content_type="text/markdown",
-    version="0.0.5",
+    version="0.0.6",
     author='genghisken',
     author_email='ken.w.smith@gmail.com',
     license='MIT',

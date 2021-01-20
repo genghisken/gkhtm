@@ -499,6 +499,165 @@ int main(int argc, char *argv[])
 
 */
 
+// Complete generic rewrite.
+std::vector<std::string> htmCircleRegionCassandraMultiQuery (size_t deepestlevel, double ra, double dec, double radius, std::string columns, std::string table_name, size_t sublevels, size_t step, bool whereOnly)
+{
+  //stringstream s;
+
+  string name;
+  string query;
+
+  // create level index required
+  htmInterface htm(deepestlevel, 5);
+
+  std::vector<htmRange> list=htm.circleRegion(ra, dec, radius);
+  std::vector<std::string> queries;
+
+  std::map<string, vector<string> > htmpartitionmap;
+
+  // Populate the map.
+  for(size_t idx=0; idx<list.size(); idx++)
+  {
+      for(long htmID = list[idx].lo; htmID <= list[idx].hi; htmID++)
+      {
+          name = htm.lookupName(htmID);
+
+          if(sublevels > 0 && step > 0 && sublevels * step < (deepestlevel + 1))
+          {
+              htmpartitionmap[name.substr(0, (2+deepestlevel)-(sublevels*step))].push_back(name.substr((2+deepestlevel)-(sublevels*step), (sublevels*step))); 
+          }
+          else
+          {
+              htmpartitionmap[name]; // adds an empty vector, which we don't need.
+          }
+      }
+  }
+
+  // Spit out the contents of the map.
+  map<string, vector<string> >::iterator it;
+
+  // This variable used if we are using the lowest (coursest) HTM ID only.
+  stringstream ss;
+
+  for ( it = htmpartitionmap.begin(); it != htmpartitionmap.end(); it++ )
+  {
+      string key = it->first;
+
+      vector<string> values = it->second;
+      if(values.size() > 0)
+      {
+          stringstream s;
+          if (!whereOnly)
+          {
+              s << "select " << columns << " from " << table_name;
+          }
+          s << " where htm" << deepestlevel - sublevels * step << " IN ";
+          s << "(" << "'" << key << "'" << ")";
+          s << " AND (";
+          for(size_t sl = 0; sl < sublevels; sl++)
+          {
+              s << "htm" << deepestlevel - sublevels * step + (sl+1)*step;
+              if (sl < sublevels - 1)
+              {
+                  s << ",";
+              }
+          }
+          s << ") IN (";
+
+          for (size_t i = 0; i < values.size(); i++)
+          {
+              s << "(";
+              for(size_t j = 0; j < sublevels; j++)
+              {
+                  s << "'" << values[i].substr(j*step,step) << "'";
+                  if (j < sublevels - 1)
+                  {
+                      s << ",";
+                  }
+              }
+              s <<  ")";
+              if (i < values.size() - 1)
+              {
+                  s << ",";
+              }
+          }
+          s <<  ");";
+          queries.push_back(s.str());
+      }
+      else
+      {
+          if (it == htmpartitionmap.begin())
+          {
+              // We only need this at the beginning of the query.
+              if (!whereOnly)
+              {
+                  ss << "select " << columns << " from " << table_name;
+              }
+              ss << " where htm" << deepestlevel - sublevels * step << " IN (";
+          }
+          ss << "'" << key << "'";
+          if (it != std::prev(htmpartitionmap.end()))
+          {
+              ss << ",";
+          }
+          if (it == std::prev(htmpartitionmap.end()))
+          {
+              // We only need this at the end of the query.
+              ss << ");";
+              queries.push_back(ss.str());
+          }
+      }
+
+  }
+  return queries;
+}
+
+std::vector<std::string> htmCircleRegionCassandra (double ra, double dec, double radius)
+{
+    // Boundaries are:
+    // r <= 15.0 arcsec - use Level 16 - i.e. we pass 16, 2, 3
+    // r  > 15.0 arcsec and r <= 200.0 arcsec - use Level 13 - i.e. we pass 13, 0, 3
+    // r  > 200.0 arcsec and r <= 1800.0 arcsec - use Level 10 - i.e. we pass 10, 0, 0
+    size_t deepestlevel; 
+    size_t sublevels;
+    size_t step;
+    std::string columns = "";
+    std::string table_name = "";
+    std::vector<std::string> q;
+    bool whereOnly = true;
+
+    if (radius <= 15.0)
+    {
+        deepestlevel = 16;
+        sublevels = 2;
+        step = 3;
+    }
+    else if (radius > 15.0 && radius <= 200.0)
+    {
+        deepestlevel = 13;
+        sublevels = 1;
+        step = 3;
+    }
+    else if (radius > 200.0 && radius <= 1800.0)
+    {
+        deepestlevel = 10;
+        sublevels = 0;
+        step = 0;
+    }
+    else
+    {
+        return q;
+    }
+
+    // HTM API wants radius in arcmins!
+    radius = radius/60.0;
+
+    q = htmCircleRegionCassandraMultiQuery (deepestlevel, ra, dec, radius, columns, table_name, sublevels, step, whereOnly);
+
+    return q;
+}
+
+/*
 std::vector<std::string> htmCircleRegionCassandra (double ra, double dec, double radius)
 {
     // Boundaries are:
@@ -649,6 +808,7 @@ std::vector<std::string> htmCircleRegionCassandra (double ra, double dec, double
 
     return queries;
 }
+*/
 
 /*
 int main(int argc, char *argv[])
