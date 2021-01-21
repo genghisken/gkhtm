@@ -581,7 +581,7 @@ std::vector<std::string> htmCircleRegionCassandraMultiQuery (size_t deepestlevel
                   s << ",";
               }
           }
-          s <<  ");";
+          s <<  ")";
           queries.push_back(s.str());
       }
       else
@@ -603,7 +603,7 @@ std::vector<std::string> htmCircleRegionCassandraMultiQuery (size_t deepestlevel
           if (it == std::prev(htmpartitionmap.end()))
           {
               // We only need this at the end of the query.
-              ss << ");";
+              ss << ")";
               queries.push_back(ss.str());
           }
       }
