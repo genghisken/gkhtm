@@ -25,7 +25,7 @@ if platform.system() == 'Darwin':
             os.environ['MACOSX_DEPLOYMENT_TARGET'] = '10.9'
 else:
     # Assumes Linux
-    extra_compile_args = ['-c', '-fPIC', '-g', '-Wall', '-D_BOOL_EXISTS', '-D__unix', '-UDIAGNOSE', '-Wno-deprecated', '-fpermissive']
+    extra_compile_args = ['-c', '-fPIC', '-g', '-Wall', '-D_BOOL_EXISTS', '-D__unix', '-UDIAGNOSE', '-Wno-deprecated', '-fpermissive', '-std=c++11']
     extra_link_args = []
 
 static_include_dirs = ['gkhtm/htm/include']
@@ -106,7 +106,7 @@ setup(
     cmdclass = {'buildstatic': BuildStaticLib},
     ext_modules=ext_modules,
     long_description_content_type="text/markdown",
-    version="0.0.7",
+    version="0.0.8",
     author='genghisken',
     author_email='ken.w.smith@gmail.com',
     license='MIT',
