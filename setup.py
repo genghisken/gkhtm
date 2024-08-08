@@ -2,6 +2,10 @@ import platform
 from setuptools import setup, Extension, find_packages
 import os
 import glob
+import platform
+
+# 2024-08-08 KWS Need to derive the architecture. Can't assume x86_64 anymore.
+arch = platform.machine()
 
 moduleDirectory = os.path.dirname(os.path.realpath(__file__))
 exec(open(moduleDirectory + "/gkhtm/__version__.py").read())
@@ -14,8 +18,8 @@ def readme():
 
 if platform.system() == 'Darwin':
     # MacOS
-    extra_compile_args = ['-c', '-g', '-D_BOOL_EXISTS', '-D__macosx', '-UDIAGNOSE', '-Wno-deprecated', '-Wno-self-assign', '-Wno-address-of-temporary', '-Wno-format', '-Wno-dangling-else', '-Wno-unused-private-field', '-arch', 'x86_64', '-stdlib=libc++']
-    extra_link_args = ['-arch', 'x86_64']
+    extra_compile_args = ['-c', '-g', '-D_BOOL_EXISTS', '-D__macosx', '-UDIAGNOSE', '-Wno-deprecated', '-Wno-self-assign', '-Wno-address-of-temporary', '-Wno-format', '-Wno-dangling-else', '-Wno-unused-private-field', '-arch', arch, '-stdlib=libc++']
+    extra_link_args = ['-arch', arch]
     from distutils.sysconfig import get_config_var
     from distutils.version import LooseVersion
     if 'MACOSX_DEPLOYMENT_TARGET' not in os.environ:
