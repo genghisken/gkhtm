@@ -14,7 +14,7 @@ Darwin)  echo "Build for MacOS"
     export CLANG_FLAGS="-c -Wall -m64 -D_BOOL_EXISTS -UDIAGNOSE -Wno-deprecated -Wno-address-of-temporary -Wno-self-assign -D__macosx -arch x86_64"
     c++ -c HTMCircleRegion.cpp HTMCircleAllIDsCassandra.cpp -I./htm/include ${CLANG_FLAGS}
     c++ -c gkhtm_wrap.cxx -I./htm/include ${CLANG_FLAGS} -fno-strict-aliasing `python${PYTHON_VERSION}-config --includes`
-    c++ -bundle -undefined dynamic_lookup -o _gkhtm.so HTMCircleRegion.o HTMCircleAllIDsCassandra.o gkhtm_wrap.o -lhtm -L./htm -arch x86_64 -L`python${PYTHON_VERSION}-config --prefix`/lib
+    c++ -bundle -undefined dynamic_lookup -o _gkhtm.so HTMCircleRegion.o HTMCircleAllIDsCassandra.o gkhtm_wrap.o -lhtm -L./htm -arch `uname -a | awk '{print $15}'` -L`python${PYTHON_VERSION}-config --prefix`/lib
     ;;
 linux)  echo  "Build for Linux"
     ./clean.sh
