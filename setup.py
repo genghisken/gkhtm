@@ -4,6 +4,7 @@ import os
 import glob
 
 moduleDirectory = os.path.dirname(os.path.realpath(__file__))
+exec(open(moduleDirectory + "/gkhtm/__version__.py").read())
 
 #sources = glob.glob('src/*.cpp') + glob.glob('src/*.i')
 
@@ -106,7 +107,7 @@ setup(
     cmdclass = {'buildstatic': BuildStaticLib},
     ext_modules=ext_modules,
     long_description_content_type="text/markdown",
-    version="0.0.8",
+    version=__version__,
     author='genghisken',
     author_email='ken.w.smith@gmail.com',
     license='MIT',
